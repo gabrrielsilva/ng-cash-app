@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    container_name: api-ng-cash
+    build: .
+    command: yarn start
+    ports:
+      - 3000:3000
+    environment:
+      - POSTGRES_HOST: gabriel:admin@0.0.0.0:5432
+      - PORT: 3000
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+  postgres:
+    container_name: postgresql
+    restart: always
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_USERNAME: gabriel
+      - POSTGRESQL_PASSWORD: 123456
+      - POSTGRESQL_DATABASE: ngcash
