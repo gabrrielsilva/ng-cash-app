@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import Bcrypt from '../src/application/service/Bcrypt';
+import GetUserAccount from '../src/application/usecase/GetUserAccount';
 import Transact from '../src/application/usecase/Transact';
 import UserRegister from '../src/application/usecase/UserRegister';
 import PgPromiseConnection from '../src/infra/database/PgPromiseConnection';
@@ -29,7 +30,13 @@ test('user should be able to transact', async function() {
   await userRegister.run(creditedUser);
   const transact = new Transact(userRepository, transactionRepository);
   const transaction = await transact.run({ debitedAccountId: debitedUser.accountId, creditedAccountId: creditedUser.accountId, value });
+  const getUserAccount = new GetUserAccount(userRepository);
+  const newUserBalanceDebited = await getUserAccount.run({ accountId: debitedUser.accountId });
+  const newUserBalanceCredited = await getUserAccount.run({ accountId: creditedUser.accountId });
 
-  console.log(transaction);
-  expect(transaction).toBeTruthy();
+  expect(transaction.value).toEqual(value);
+  expect(transaction.debitedAccountId).toEqual(debitedUser.accountId);
+  expect(transaction.creditedAccountId).toEqual(creditedUser.accountId);
+  expect(newUserBalanceDebited.account.balance).toEqual(100 - value);
+  expect(newUserBalanceCredited.account.balance).toEqual(100 + value);
 })
