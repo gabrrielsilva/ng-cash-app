@@ -9,7 +9,7 @@ export default class UserDatabaseRepository implements UserRepository {
   
   async register (user: User): Promise<void> {
     const accountGenerator = new AccountGenerator();
-    const account = await accountGenerator.generate();
+    const account = await accountGenerator.generate(user.accountId);
     await this.connection.query('INSERT INTO ng.accounts (id, balance) VALUES ($1, $2)', [account.id, account.balance]);
     await this.connection.query('INSERT INTO ng.users (id, username, password, accountid) VALUES ($1, $2, $3, $4)', [
       user.id,

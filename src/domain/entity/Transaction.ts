@@ -1,9 +1,11 @@
 export default class Transaction {
   constructor (
     readonly id: string,
-    readonly debitedaccountid: string,
-    readonly creditedaccountid: string,
+    readonly debitedAccountId: string,
+    readonly creditedAccountId: string,
     readonly value: number,
-    readonly createdat: Date
-  ) {}
+    readonly createdAt: Date
+  ) {
+    if (debitedAccountId === creditedAccountId) throw new Error('Cannot transact to self');
+  }
 }

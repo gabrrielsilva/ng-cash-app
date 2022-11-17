@@ -10,21 +10,21 @@ export default class TransactionDatabaseRepository implements TransactionReposit
   constructor(readonly connection: Connection) {}
 
   async transact (debitedAccount: Account, creditedAccount: Account, value: number): Promise<Transaction> {
-    const balanceGeneratorCashOut = new BalanceGeneratorCashOut();
-    const newUserBalanceDebited = await balanceGeneratorCashOut.generate(debitedAccount.balance, value);
-    const balanceGeneratorCashIn = new BalanceGeneratorCashIn();
-    const newUserBalanceCredited = await balanceGeneratorCashIn.generate(creditedAccount.balance, value);
-    await this.connection.query('UPDATE ng.accounts SET balance = $1 WHERE id = $2', [newUserBalanceDebited, debitedAccount.id]);
-    await this.connection.query('UPDATE ng.accounts SET balance = $1 WHERE id = $2', [newUserBalanceCredited, creditedAccount.id]);
     const id = crypto.randomUUID();
     const createdAt = new Date();
     const transaction = new Transaction(id, debitedAccount.id, creditedAccount.id, value, createdAt);
-    await this.connection.query('INSERT INTO ng.transactions (id, debitedaccountid, creditedAccountId, value, createdAt) VALUES ($1, $2, $3, $4, $5)', [
+    const balanceGeneratorCashOut = new BalanceGeneratorCashOut();
+    const newUserBalanceDebited = await balanceGeneratorCashOut.generate(debitedAccount.balance, transaction.value);
+    const balanceGeneratorCashIn = new BalanceGeneratorCashIn();
+    const newUserBalanceCredited = await balanceGeneratorCashIn.generate(creditedAccount.balance, transaction.value);
+    await this.connection.query('UPDATE ng.accounts SET balance = $1 WHERE id = $2', [newUserBalanceDebited.value, debitedAccount.id]);
+    await this.connection.query('UPDATE ng.accounts SET balance = $1 WHERE id = $2', [newUserBalanceCredited.value, creditedAccount.id]);
+    await this.connection.query('INSERT INTO ng.transactions (id, debitedaccountid, creditedaccountid, value, createdat) VALUES ($1, $2, $3, $4, $5)', [
       transaction.id,
-      transaction.debitedaccountid,
-      transaction.creditedaccountid,
+      transaction.debitedAccountId,
+      transaction.creditedAccountId,
       transaction.value,
-      transaction.createdat
+      transaction.createdAt
     ])
     return transaction;
   }

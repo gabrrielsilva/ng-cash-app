@@ -7,7 +7,7 @@ export default class UserRegister {
 
   async run (input: Input): Promise<void> {
     const hashedPassword = await this.hashService.hash(input.password, 7);    
-    await this.userRepository.register(new User(input.id, input.username, hashedPassword));
+    await this.userRepository.register(new User(input.id, input.username, hashedPassword, input.accountId));
   }
 }
 
@@ -15,4 +15,5 @@ type Input = {
   id: string;
   username: string;
   password: string;
+  accountId: string
 }
