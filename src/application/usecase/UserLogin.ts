@@ -16,7 +16,7 @@ export default class UserLogin {
     if (!user) throw new Error('User not found');
     const passwordMatch = await this.hashService.compare(input.password, user.password);
     if (!passwordMatch) throw new Error('Incorrect password');
-    const token = await this.jwtService.sign({ sub: user.username, userId: user.id }, process.env.JWT_EXPIRATION_TIME as string);
+    const token = await this.jwtService.sign({ sub: user.username, accountId: user.accountId }, process.env.JWT_EXPIRATION_TIME as string);
     return { token };
   }
 }

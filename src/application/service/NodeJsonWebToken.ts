@@ -11,7 +11,7 @@ export default class NodeJsonWebToken implements Jwt {
     return token;
   }
 
-  async validate (token: string): Promise<object> {
+  async validate (token: string): Promise<{ [key: string]: any }> {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as jwt.JwtPayload;
     return decoded;
   }
