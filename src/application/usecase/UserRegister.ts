@@ -6,7 +6,7 @@ export default class UserRegister {
   constructor (readonly userRepository: UserRepository, readonly hashService: Hash) {}
 
   async run (input: Input): Promise<void> {
-    const hashedPassword = await this.hashService.hash(input.password, 7);    
+    const hashedPassword = await this.hashService.hash(input.password, 7);
     await this.userRepository.register(new User(input.id, input.username, hashedPassword, input.accountId));
   }
 }

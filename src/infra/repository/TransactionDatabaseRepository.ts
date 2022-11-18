@@ -9,6 +9,11 @@ import Connection from '../database/Connection';
 export default class TransactionDatabaseRepository implements TransactionRepository {
   constructor(readonly connection: Connection) {}
 
+  async getAll (accountId: string): Promise<Transaction[]> {
+    const transactions = await this.connection.query<Transaction>('SELECT * FROM ng.transactions WHERE debitedAccountId = $1 OR creditedAccountId = $1', [accountId]);
+    return transactions;
+  }
+
   async transact (debitedAccount: Account, creditedAccount: Account, value: number): Promise<Transaction> {
     const id = crypto.randomUUID();
     const createdAt = new Date();
