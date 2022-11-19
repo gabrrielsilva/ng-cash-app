@@ -5,7 +5,7 @@ export default class GetTransactions {
   constructor (readonly transactionRepository: TransactionRepository) {}
 
   async run (input: Input): Promise<Output> {
-    const transactions = await this.transactionRepository.getAll(input.accountId);
+    const transactions = await this.transactionRepository.getAll(input.accountId);    
     return { transactions };
   }
 }

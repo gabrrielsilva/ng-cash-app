@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --transpile-only --respawn src/application/server.ts",
+    "dev": "tsnd --transpile-only --respawn src/main/server.ts",
     "start": "node src/server.ts",
     "test": "jest"
   },

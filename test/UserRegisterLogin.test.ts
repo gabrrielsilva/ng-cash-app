@@ -3,8 +3,8 @@ import crypto from 'node:crypto';
 import Bcrypt from '../src/application/service/Bcrypt';
 import NodeJsonWebToken from '../src/application/service/NodeJsonWebToken';
 import GetUserAccount from '../src/application/usecase/GetUserAccount';
-import UserLogin from '../src/application/usecase/UserLogin';
-import UserRegister from '../src/application/usecase/UserRegister';
+import Login from '../src/application/usecase/Login';
+import RegisterUser from '../src/application/usecase/RegisterUser';
 import PgPromiseConnection from '../src/infra/database/PgPromiseConnection';
 import UserDatabaseRepository from '../src/infra/repository/UserDatabaseRepository';
 dotenv.config();
@@ -19,12 +19,12 @@ test('user should be able to register and login', async function() {
     accountId: crypto.randomUUID()
   }
   const hashService = new Bcrypt();
-  const userRegister = new UserRegister(userRepository, hashService);
-  await userRegister.run(input);
+  const registerUser = new RegisterUser(userRepository, hashService);
+  await registerUser.run(input);
   const jwtService = new NodeJsonWebToken();
-  const userLogin = new UserLogin(userRepository, hashService, jwtService);
-  const userLoginOutput = await userLogin.run({ username: input.username, password: input.password });
-  const decoded = await jwtService.validate(userLoginOutput.token);
+  const login = new Login(userRepository, hashService, jwtService);
+  const loginOutput = await login.run({ username: input.username, password: input.password });
+  const decoded = await jwtService.validate(loginOutput.token);
 
   expect(decoded).toMatchObject({ sub: input.username, accountId: input.accountId });
 

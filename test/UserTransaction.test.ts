@@ -2,8 +2,8 @@ import crypto from 'crypto';
 import Bcrypt from '../src/application/service/Bcrypt';
 import GetTransactions from '../src/application/usecase/GetTransactions';
 import GetUserAccount from '../src/application/usecase/GetUserAccount';
+import RegisterUser from '../src/application/usecase/RegisterUser';
 import Transact from '../src/application/usecase/Transact';
-import UserRegister from '../src/application/usecase/UserRegister';
 import PgPromiseConnection from '../src/infra/database/PgPromiseConnection';
 import TransactionDatabaseRepository from '../src/infra/repository/TransactionDatabaseRepository';
 import UserDatabaseRepository from '../src/infra/repository/UserDatabaseRepository';
@@ -27,9 +27,9 @@ test('user should be able to transact', async function() {
   }
   const firstTransactionValue = 50;
   const secondTransactionValue = 25;
-  const userRegister = new UserRegister(userRepository, hashService);
-  await userRegister.run(debitedUser);
-  await userRegister.run(creditedUser);
+  const registerUser = new RegisterUser(userRepository, hashService);
+  await registerUser.run(debitedUser);
+  await registerUser.run(creditedUser);
   const transact = new Transact(userRepository, transactionRepository);
   const firstTransaction = await transact.run({ debitedAccountId: debitedUser.accountId, creditedAccountId: creditedUser.accountId, value: firstTransactionValue });
   const secondTransaction = await transact.run({ debitedAccountId: debitedUser.accountId, creditedAccountId: creditedUser.accountId, value: secondTransactionValue });
@@ -40,12 +40,12 @@ test('user should be able to transact', async function() {
   const debitedUserTransactions = await getTransactions.run({ accountId: debitedUser.accountId });
   const creditedUserTransactions = await getTransactions.run({ accountId: creditedUser.accountId });
 
-  expect(firstTransaction.value).toEqual(firstTransactionValue);
-  expect(firstTransaction.debitedAccountId).toEqual(debitedUser.accountId);
-  expect(firstTransaction.creditedAccountId).toEqual(creditedUser.accountId);
-  expect(secondTransaction.value).toEqual(secondTransactionValue);
-  expect(secondTransaction.debitedAccountId).toEqual(debitedUser.accountId);
-  expect(secondTransaction.creditedAccountId).toEqual(creditedUser.accountId);
+  expect(firstTransaction.transaction.value).toEqual(firstTransaction.transaction.value);
+  expect(firstTransaction.transaction.debitedAccountId).toEqual(debitedUser.accountId);
+  expect(firstTransaction.transaction.creditedAccountId).toEqual(creditedUser.accountId);
+  expect(secondTransaction.transaction.value).toEqual(secondTransactionValue);
+  expect(secondTransaction.transaction.debitedAccountId).toEqual(debitedUser.accountId);
+  expect(secondTransaction.transaction.creditedAccountId).toEqual(creditedUser.accountId);
   expect(newUserBalanceDebited.account.balance).toEqual(100 - firstTransactionValue - secondTransactionValue);
   expect(newUserBalanceCredited.account.balance).toEqual(100 + firstTransactionValue + secondTransactionValue);
   expect(debitedUserTransactions.transactions.length).toBe(2);

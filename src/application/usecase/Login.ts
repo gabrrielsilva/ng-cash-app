@@ -4,7 +4,7 @@ import Hash from '../service/interface/Hash';
 import Jwt from '../service/interface/Jwt';
 dotenv.config();
 
-export default class UserLogin {
+export default class Login {
   constructor (
     readonly userRepository: UserRepository, 
     readonly hashService: Hash, 
