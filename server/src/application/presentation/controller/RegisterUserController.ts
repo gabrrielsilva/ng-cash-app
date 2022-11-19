@@ -4,6 +4,7 @@ import { MissingParamError } from './error';
 import { badRequest, ok, serverError } from './helper/HttpHelper';
 import { HttpRequest, HttpResponse } from './port/Http';
 import Controller from './type/Controller';
+import getErrorMessage from './util/GetErrorMessage';
 
 export default class RegisterUserController implements Controller {
   constructor (readonly registerUser: RegisterUser) {}
@@ -21,8 +22,8 @@ export default class RegisterUserController implements Controller {
         accountId: crypto.randomUUID() 
       })
       return ok(null);
-    } catch (e) {
-      return serverError('internal')
+    } catch (error) {
+      return serverError(getErrorMessage(error))
     }
   }
 }

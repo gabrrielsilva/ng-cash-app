@@ -4,6 +4,7 @@ import { UnauthorizedError } from './error/UnauthorizedError';
 import { ok, serverError, unauthorized } from './helper/HttpHelper';
 import { HttpRequest, HttpResponse } from './port/Http';
 import Controller from './type/Controller';
+import getErrorMessage from './util/GetErrorMessage';
 
 export default class GetTransactionsController implements Controller {
   constructor (readonly getTransactions: GetTransactions, readonly jwtService: Jwt) {}
@@ -20,8 +21,8 @@ export default class GetTransactionsController implements Controller {
       }
       const getTransactionsOutput = await this.getTransactions.run({ accountId: decodedToken.accountId });
       return ok(getTransactionsOutput);
-    } catch (e) {
-      return serverError('internal')
+    } catch (error) {
+      return serverError(getErrorMessage(error))
     }
   }
 }

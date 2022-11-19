@@ -5,6 +5,7 @@ import { UnauthorizedError } from './error/UnauthorizedError';
 import { badRequest, ok, serverError, unauthorized } from './helper/HttpHelper';
 import { HttpRequest, HttpResponse } from './port/Http';
 import Controller from './type/Controller';
+import getErrorMessage from './util/GetErrorMessage';
 
 export default class TransactController implements Controller {
   constructor (readonly transact: Transact, readonly jwtService: Jwt) {}
@@ -29,8 +30,8 @@ export default class TransactController implements Controller {
         value: httpRequest.body.value
       });
       return ok(transactOutput);
-    } catch (e) {
-      return serverError('internal')
+    } catch (error) {
+      return serverError(getErrorMessage(error))
     }
   }
 }

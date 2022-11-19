@@ -4,6 +4,7 @@ import { UnauthorizedError } from './error/UnauthorizedError';
 import { ok, serverError, unauthorized } from './helper/HttpHelper';
 import { HttpRequest, HttpResponse } from './port/Http';
 import Controller from './type/Controller';
+import getErrorMessage from './util/GetErrorMessage';
 
 export default class GetUserAccountController implements Controller {
   constructor (readonly getUserAccount: GetUserAccount, readonly jwtService: Jwt) {}
@@ -20,8 +21,8 @@ export default class GetUserAccountController implements Controller {
       };
       const getUserAccountOutput = await this.getUserAccount.run({ accountId: decodedToken.accountId });
       return ok(getUserAccountOutput);
-    } catch (e) {
-      return serverError('internal')
+    } catch (error) {
+      return serverError(getErrorMessage(error))
     }
   }
 }
