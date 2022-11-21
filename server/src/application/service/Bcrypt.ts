@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import Hash from './interface/Hash';
 
 export default class Bcrypt implements Hash {

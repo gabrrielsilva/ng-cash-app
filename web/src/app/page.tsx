@@ -34,7 +34,7 @@ export default function Register() {
 
   return (
     <>
-      <div className='flex items-center justify-center h-full min-h-screen px-4 py-12 bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-zinc-700 via-background to-zinc-700 sm:px-6 lg:px-8'>
+      <div className='flex items-center justify-center h-full min-h-screen px-4 py-12 bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-indigo-700 via-indigo-900 to-indigo-700 sm:px-6 lg:px-8'>
         <div className='w-full max-w-md space-y-8'>
           <Title text='Create your account NG.CASH' />
           <Link href={'/login'}>
@@ -46,9 +46,9 @@ export default function Register() {
               <FormInput type={'text'} field={'username'} register={registerField} minLength={3} onFocus={clearErrors} extraStyles='rounded-t-lg' />
               <FormInput type={'password'} field={'password'} register={registerField} minLength={8} onFocus={clearErrors} extraStyles='rounded-b-lg' />
             </div>
-            {errorMessage ? <span className='text-sm font-semibold text-red-600 '>Opps... {errorMessage}</span> : ''}
-            {!errorMessage && validCredentials ? <span className='text-sm font-semibold text-blue-500 '>Redirecionando...</span> : ''}
-            <Button type='submit' text='Login' icon={UserAddIcon} />
+            {errorMessage ? <span className='text-sm font-semibold text-red-600'>Opps... {errorMessage}</span> : ''}
+            {!errorMessage && validCredentials ? <span className='text-sm font-semibold text-blue-300 '>Redirecionando...</span> : ''}
+            <Button type='submit' text='Create' icon={UserAddIcon} extraStyles={'w-full bg-primary hover:bg-primary/80 text-black'} />
           </form>
         </div>
       </div>

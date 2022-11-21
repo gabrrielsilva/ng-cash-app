@@ -1,3 +1,4 @@
+create database ngcash;
 create schema ng;
 
 create table ng.accounts (

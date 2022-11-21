@@ -2,8 +2,8 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { destroyCookie, setCookie } from 'nookies';
-import React, { createContext, useState } from 'react';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
+import React, { createContext, useEffect, useState } from 'react';
 import { api } from '../service/api';
 
 type User = {
@@ -30,6 +30,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    const { 'ng.token': token } = parseCookies();
+    if (token) {
+      decodeToken(token).then(decoded => {
+        setUser({ username: decoded.sub, accountId: decoded.accountId })
+      })
+    }
+  }, [])
+
   async function register({ username, password }: Credentials) {
     await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/register`, {
       username, 
@@ -38,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function decodeToken(token: string) {
-    const response = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/decode`, {
+    const response = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/api/decode`, {
       token
     })
     const decoded = response.data as { sub: string, accountId: string };

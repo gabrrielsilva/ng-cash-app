@@ -12,8 +12,8 @@ export default class TransactController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      if (!httpRequest.body.creditedAccountId || !httpRequest.body.value) {
-        const field = !httpRequest.body.creditedAccountId ? 'creditedAccountId' : 'value';
+      if (!httpRequest.body.username || !httpRequest.body.value) {
+        const field = !httpRequest.body.username ? 'username' : 'value';
         return badRequest(new MissingParamError(field));
       };
       if (!httpRequest.headers.authorization) {
@@ -26,7 +26,7 @@ export default class TransactController implements Controller {
       }
       const transactOutput = await this.transact.run({ 
         debitedAccountId: decodedToken.accountId, 
-        creditedAccountId: httpRequest.body.creditedAccountId, 
+        username: httpRequest.body.username, 
         value: httpRequest.body.value
       });
       return ok(transactOutput);

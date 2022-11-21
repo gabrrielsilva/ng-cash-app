@@ -31,14 +31,16 @@ test('user should be able to transact', async function() {
   await registerUser.run(debitedUser);
   await registerUser.run(creditedUser);
   const transact = new Transact(userRepository, transactionRepository);
-  const firstTransaction = await transact.run({ debitedAccountId: debitedUser.accountId, creditedAccountId: creditedUser.accountId, value: firstTransactionValue });
-  const secondTransaction = await transact.run({ debitedAccountId: debitedUser.accountId, creditedAccountId: creditedUser.accountId, value: secondTransactionValue });
+  const firstTransaction = await transact.run({ debitedAccountId: debitedUser.accountId, username: debitedUser.username, value: firstTransactionValue });
+  const secondTransaction = await transact.run({ debitedAccountId: debitedUser.accountId, username: debitedUser.username, value: secondTransactionValue });
   const getUserAccount = new GetUserAccount(userRepository);
   const newUserBalanceDebited = await getUserAccount.run({ accountId: debitedUser.accountId });
   const newUserBalanceCredited = await getUserAccount.run({ accountId: creditedUser.accountId });
   const getTransactions = new GetTransactions(transactionRepository);
   const debitedUserTransactions = await getTransactions.run({ accountId: debitedUser.accountId });
   const creditedUserTransactions = await getTransactions.run({ accountId: creditedUser.accountId });
+
+  connection.close();
 
   expect(firstTransaction.transaction.value).toEqual(firstTransaction.transaction.value);
   expect(firstTransaction.transaction.debitedAccountId).toEqual(debitedUser.accountId);

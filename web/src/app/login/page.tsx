@@ -30,11 +30,11 @@ export default function Login() {
 
   return (
     <>
-      <div className='flex items-center justify-center h-full min-h-screen px-4 py-12 bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-zinc-700 via-background to-zinc-700 sm:px-6 lg:px-8'>
+      <div className='flex items-center justify-center h-full min-h-screen px-4 py-12 bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-indigo-700 via-indigo-900 to-indigo-700 sm:px-6 lg:px-8'>
         <div className='w-full max-w-md space-y-8'>
           <Title text='Login to your Account' />
           <Link href='/'>
-            <span className='text-sm font-semibold cursor-pointer hover:underline  text-primary'>Or create your account NG.CASH</span>
+            <span className='text-sm font-semibold cursor-pointer hover:underline text-primary'>Or create your account NG.CASH</span>
           </Link>
           <form className='mt-8 space-y-6' onSubmit={handleSubmit(handleLogin)} >
             <input type='hidden' name='remember' defaultValue='true' />
@@ -44,7 +44,7 @@ export default function Login() {
             </div>
             {errorMessage ? <span className='text-sm font-semibold text-red-600 '>Opps... {errorMessage}</span> : ''}
             {!errorMessage && validCredentials ? <span className='text-sm font-semibold text-blue-500 '>Redirecionando...</span> : ''}
-            <Button type='submit' text='Login' icon={LoginIcon} />
+            <Button type='submit' text='Login' icon={LoginIcon} extraStyles={'w-full bg-primary hover:bg-primary/80 text-black'} />
           </form>
         </div>
       </div>

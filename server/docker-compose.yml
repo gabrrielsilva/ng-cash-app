@@ -1,26 +1,33 @@
 version: '3'
-services:
-  app:
-    container_name: api-ng-cash
-    build: .
-    command: yarn start
-    ports:
-      - 3000:3000
-    environment:
-      - POSTGRES_HOST: gabriel:admin@0.0.0.0:5432
-      - PORT: 3000
-    depends_on:
-      - postgres
-    links:
-      - postgres
 
-  postgres:
-    container_name: postgresql
-    restart: always
+services:
+  db:
     image: postgres
+    restart: always
     ports:
       - 5432:5432
+    networks:
+      - default
     environment:
-      - POSTGRESQL_USERNAME: gabriel
-      - POSTGRESQL_PASSWORD: 123456
-      - POSTGRESQL_DATABASE: ngcash
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ./create.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+  app:
+    build: .
+    command: yarn dev
+    ports:
+      - 3333:3333
+    networks:
+      - default
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/ngcash
+      - JWT_SECRET_KEY=nuifHWOUJFAWUIFH28u09dwkjndiuahd8
+      - JWT_EXPIRATION_TIME=1d
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - db

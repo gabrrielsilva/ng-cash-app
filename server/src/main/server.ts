@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { Router } from 'express';
 import { readdirSync } from 'fs';
 
@@ -9,7 +10,8 @@ readdirSync(`${__dirname}/route`).map(async file => {
 })
 
 app.use(express.json());
+app.use(cors());
 app.use('/api', router);
-app.listen(3000, () => console.log('Server is running in http://localhost:3000'));
+app.listen(3333, () => console.log('Server is running in http://localhost:3333'));
 
 export default app;
