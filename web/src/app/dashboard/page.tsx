@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { BalanceCard } from './BalanceCard';
 import { SendMoneyCard } from './SendMoneyCard';
 import { TransactionsCard } from './TransactionsCard';
-import { TransactionsHeader } from './TransactionsHeader';
 
 type Account = {
   id: string,
@@ -18,7 +17,7 @@ export type Transaction = {
   createdat: Date,
 }
 
-async function getAccount() {
+async function getBalance() {
   const nextCookies = cookies();
   const token = nextCookies.get('ng.token');
   if (!token) redirect('/');
@@ -32,7 +31,7 @@ async function getAccount() {
   })
   const data = await response.json();  
   const account = data.account as Account;
-  return account;
+  return account.balance;
 }
 
 async function getTransactions() {
@@ -50,7 +49,7 @@ async function getTransactions() {
 }
 
 export default async function Dashboard () {
-  const { balance, id } = await getAccount();
+  const balance = await getBalance();
   const transactions = await getTransactions();
     
   return (
@@ -59,9 +58,8 @@ export default async function Dashboard () {
         <BalanceCard balance={balance} />
         <SendMoneyCard />
       </div>
-      <div className='h-full overflow-hidden'>
-        <TransactionsHeader />
-        <TransactionsCard accountId={id} transactions={transactions} />
+      <div className='relative flex flex-col h-full overflow-hidden'>
+        <TransactionsCard transactions={transactions} />
       </div>
     </div>
   )

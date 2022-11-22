@@ -2,7 +2,8 @@
 
 import { LoginIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import { useContext, useState } from 'react';
+import { redirect } from 'next/navigation';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../../component/Button';
 import { FormInput } from '../../component/FormInput';
@@ -11,9 +12,13 @@ import { AuthContext } from '../../context/AuthContext';
 
 export default function Login() {
   const { register: registerField, handleSubmit } = useForm();
-  const { login } = useContext(AuthContext);
+  const { login, isAuthenticated } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState<string>(null);
   const [validCredentials, setValidCredentials] = useState<boolean>(!!errorMessage);
+
+  useEffect(() => {
+    if (isAuthenticated) redirect('/dashboard')
+  }, [isAuthenticated]);
   
   async function handleLogin ({ username, password }) {
     try {

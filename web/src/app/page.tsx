@@ -2,8 +2,8 @@
 
 import { UserAddIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useContext, useState } from 'react';
+import { redirect } from 'next/navigation';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../component/Button';
 import { FormInput } from '../component/FormInput';
@@ -13,11 +13,14 @@ import '../style/globals.css';
 
 export default function Register() {
   const { register: registerField, handleSubmit } = useForm();
-  const { register, login } = useContext(AuthContext);
+  const { register, login, isAuthenticated } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState<string>(null);
   const [validCredentials, setValidCredentials] = useState<boolean>(!!errorMessage);
-  const router = useRouter();
   
+  useEffect(() => {
+    if (isAuthenticated) redirect('/dashboard')
+  }, [isAuthenticated]);
+
   async function handleRegister ({ username, password }) {
     try {
       await register({ username, password });
