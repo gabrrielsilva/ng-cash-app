@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  ui:
+    build: .
+    command: yarn dev
+    ports:
+      - 3000:3000
+    networks:
+      - default
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      - NEXT_PUBLIC_API_URL=http://host.docker.internal:3333
+    volumes:
+      - .:/usr/app
