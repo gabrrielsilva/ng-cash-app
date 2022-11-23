@@ -20,3 +20,19 @@ E então:
 psql -U postgres -d ngcash -f docker-entrypoint-initdb.d/create_tables.sql
 ```
 Agora está tudo certo! A aplicação estará disponível em http://localhost:3000.
+
+# Dependências
+## Frontend
+- NextJS
+- TypeScript
+- Nookies
+- React Hook Form
+- TailwindCSS
+- HeadlessUI
+## Backend
+- Express
+- TypeScript
+- Jest
+- Json Web Token
+- Bcrypt
+- Pg Promise (PostgreSQL interface)
